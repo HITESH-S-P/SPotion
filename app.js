@@ -51,7 +51,7 @@ class SPotion {
     this.categoryColors = defaultData.CATEGORY_COLORS;
     this.currentTheme = localTheme || "dark";
 
-    // Align paper colors, clean up fake comments, and update to direct PDF links automatically
+    // Align paper colors, clean up fake comments, update to direct PDF links, and update Survey statuses automatically
     this.papers.forEach(p => {
       if (this.categoryColors[p.category]) {
         p.color = this.categoryColors[p.category];
@@ -62,6 +62,9 @@ class SPotion {
       const defaultPaper = defaultData.DEFAULT_PAPERS.find(dp => dp.id === p.id);
       if (defaultPaper && defaultPaper.link) {
         p.link = defaultPaper.link;
+      }
+      if (p.category === "Survey" && (p.status === "Bookmarked" || p.status === "Done")) {
+        p.status = "Reading";
       }
     });
   }
