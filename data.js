@@ -208,22 +208,22 @@ const DEFAULT_PAPERS = [
     notes: "# Neural Memory Self-Supervised State Space Models With Learnable Gates\n\nSelf-supervised depth and ego-motion estimation. Uses optical flow and photo-consistency loss to guide the training loop.",
     comments: []
   },
-  // {
-  //   id: "paper-13",
-  //   title: "Perceptual Learning Technology Based on CV and ML",
-  //   category: "Application",
-  //   summary: "To address the issue of low accuracy and poor robustness of perceptual learning in complex scenarios, a new method integrating computer vision and machine learning is adopted, that is, by applying deep neural networks, transfer learning and self-supervised learning, combined with multimodal data fusion strategy, to improve target recognition efficiency and learning ability. First, based on the preprocessing algorithm of improved Gaussian filtering and image segmentation, the quality of image features is improved. Data enhancement methods such as random rotation, flipping, and blurring are used to expand data distribution and improve model adaptability. Secondly, a convolutional neural network (CNN) is utilized in combination with an attention mechanism to extract multi-scale target features, and transfer learning is applied to transfer common features from pre-trained models to reduce dependence on large-scale labeled data. Finally, a contrastive learning framework is constructed to mine the correlation of unlabeled data. Transformer is used to realize the fusion of multimodal data of images and texts, and the model performance is optimized through multi-task learning. The mAP (Mean Average Precision) of the traditional method in dynamic occlusion scenarios is 60.5%, which is relatively weak. This may be because the traditional method cannot fully extract the effective features of the target under the occlusion of complex moving targets. The mAP of the method in this paper is 72.8%, which is higher than that of the traditional method. The perceptual learning method adopted in this paper effectively improves the accuracy and robustness in complex scenarios, and provides reliable technical support for intelligent applications. In the future, it can be combined with edge computing to further optimize the real-time processing capability and promote its application in the fields of unmanned driving and intelligent security.",
-  //   link: "https://ieeexplore.ieee.org/document/10967637",
-  //   x: 1600,
-  //   y: 520,
-  //   color: "#0891b2",
-  //   year: 2024,
-  //   authors: "S. Roy, M. Ali",
-  //   venue: "IEEE Transactions on Cybernetics",
-  //   status: "Reading",
-  //   notes: "# Perceptual Learning Technology\n\nCombines vision-language alignment (contrastive) with temporal state-space models. Shows major gains in robotics manipulation benchmarks.",
-  //   comments: []
-  // },
+  {
+    id: "paper-13",
+    title: "Perceptual Learning Technology Based on CV and ML",
+    category: "Application",
+    summary: "To address the issue of low accuracy and poor robustness of perceptual learning in complex scenarios, a new method integrating computer vision and machine learning is adopted, that is, by applying deep neural networks, transfer learning and self-supervised learning, combined with multimodal data fusion strategy, to improve target recognition efficiency and learning ability. First, based on the preprocessing algorithm of improved Gaussian filtering and image segmentation, the quality of image features is improved. Data enhancement methods such as random rotation, flipping, and blurring are used to expand data distribution and improve model adaptability. Secondly, a convolutional neural network (CNN) is utilized in combination with an attention mechanism to extract multi-scale target features, and transfer learning is applied to transfer common features from pre-trained models to reduce dependence on large-scale labeled data. Finally, a contrastive learning framework is constructed to mine the correlation of unlabeled data. Transformer is used to realize the fusion of multimodal data of images and texts, and the model performance is optimized through multi-task learning. The mAP (Mean Average Precision) of the traditional method in dynamic occlusion scenarios is 60.5%, which is relatively weak. This may be because the traditional method cannot fully extract the effective features of the target under the occlusion of complex moving targets. The mAP of the method in this paper is 72.8%, which is higher than that of the traditional method. The perceptual learning method adopted in this paper effectively improves the accuracy and robustness in complex scenarios, and provides reliable technical support for intelligent applications. In the future, it can be combined with edge computing to further optimize the real-time processing capability and promote its application in the fields of unmanned driving and intelligent security.",
+    link: "https://ieeexplore.ieee.org/document/10967637",
+    x: 1600,
+    y: 520,
+    color: "#0891b2",
+    year: 2024,
+    authors: "S. Roy, M. Ali",
+    venue: "IEEE Transactions on Cybernetics",
+    status: "Done",
+    notes: "# Perceptual Learning Technology\n\nCombines vision-language alignment (contrastive) with temporal state-space models. Shows major gains in robotics manipulation benchmarks.",
+    comments: []
+  },
   // {
   //   id: "paper-14",
   //   title: "Edge AI Deployment",
