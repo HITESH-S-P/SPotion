@@ -272,9 +272,41 @@
           <div id="panel-paper-summary" class="detail-value"></div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group">
+            <label class="detail-label" for="panel-paper-category-select">Category</label>
+            <select id="panel-paper-category-select" class="form-control" style="padding: 4px 8px; margin-top: 4px;">
+              <option value="Foundations">Foundations</option>
+              <option value="Survey">Survey</option>
+              <option value="Optimization">Optimization</option>
+              <option value="Transformer">Transformer</option>
+              <option value="Autoencoder">Autoencoder</option>
+              <option value="Application">Application</option>
+              <option value="Future">Future Scope</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="detail-label" for="panel-paper-status-select">Status / Bookmark</label>
+            <select id="panel-paper-status-select" class="form-control" style="padding: 4px 8px; margin-top: 4px;">
+              <option value="Reading">Reading</option>
+              <option value="Done">Done</option>
+              <option value="Bookmarked">⭐ Bookmarked</option>
+              <option value="In Review">In Review</option>
+            </select>
+          </div>
+        </div>
+
         <div class="detail-row">
           <div class="detail-label">Metadata Info</div>
           <div id="panel-paper-details" class="detail-value"></div>
+        </div>
+
+        <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+          <button id="delete-paper-btn" class="btn"
+            style="background: var(--accent-danger); border-color: var(--accent-danger); color: white; padding: 6px 12px; font-size: 12px;">
+            🗑️ Delete Paper
+          </button>
         </div>
 
         <!-- Paper Comments Section -->

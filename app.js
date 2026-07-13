@@ -51,13 +51,17 @@ class SPotion {
     this.categoryColors = defaultData.CATEGORY_COLORS;
     this.currentTheme = localTheme || "dark";
 
-    // Align paper colors and clean up fake comments automatically
+    // Align paper colors, clean up fake comments, and update to direct PDF links automatically
     this.papers.forEach(p => {
       if (this.categoryColors[p.category]) {
         p.color = this.categoryColors[p.category];
       }
       if (p.comments) {
         p.comments = p.comments.filter(c => c.author === "Hitesh");
+      }
+      const defaultPaper = defaultData.DEFAULT_PAPERS.find(dp => dp.id === p.id);
+      if (defaultPaper && defaultPaper.link) {
+        p.link = defaultPaper.link;
       }
     });
   }
@@ -217,6 +221,59 @@ class SPotion {
     const noteArea = document.getElementById("notes-editor-area");
     if (noteArea) {
       noteArea.addEventListener("input", () => this.saveActiveNote());
+    }
+
+    // Change category from details panel
+    const detailCategorySelect = document.getElementById("panel-paper-category-select");
+    if (detailCategorySelect) {
+      detailCategorySelect.addEventListener("change", (e) => {
+        if (!this.selectedPaperId) return;
+        const newCat = e.target.value;
+        const paper = this.papers.find(p => p.id === this.selectedPaperId);
+        if (paper) {
+          paper.category = newCat;
+          paper.color = this.categoryColors[newCat] || "var(--accent-primary)";
+          this.saveState();
+          this.showToast(`Category updated to ${newCat}`, "success");
+          this.showView(this.activeView);
+        }
+      });
+    }
+
+    // Change status / bookmark from details panel
+    const detailStatusSelect = document.getElementById("panel-paper-status-select");
+    if (detailStatusSelect) {
+      detailStatusSelect.addEventListener("change", (e) => {
+        if (!this.selectedPaperId) return;
+        const newStatus = e.target.value;
+        const paper = this.papers.find(p => p.id === this.selectedPaperId);
+        if (paper) {
+          paper.status = newStatus;
+          this.saveState();
+          this.showToast(`Status updated to ${newStatus}`, "success");
+          this.showView(this.activeView);
+        }
+      });
+    }
+
+    // Delete paper from details panel
+    const deletePaperBtn = document.getElementById("delete-paper-btn");
+    if (deletePaperBtn) {
+      deletePaperBtn.addEventListener("click", () => {
+        if (!this.selectedPaperId) return;
+        if (this.selectedPaperId === "paper-root") {
+          this.showToast("The foundations root node cannot be deleted.", "error");
+          return;
+        }
+        if (confirm("Are you sure you want to delete this paper? This action cannot be undone.")) {
+          this.papers = this.papers.filter(p => p.id !== this.selectedPaperId);
+          this.connections = this.connections.filter(c => c.from !== this.selectedPaperId && c.to !== this.selectedPaperId);
+          this.saveState();
+          this.closeSlidingPanel();
+          this.showToast("Paper deleted successfully", "success");
+          this.showView(this.activeView);
+        }
+      });
     }
   }
 
@@ -394,6 +451,11 @@ class SPotion {
     const authorsDom = document.getElementById("panel-paper-authors");
     const detailsDom = document.getElementById("panel-paper-details");
     const commentsList = document.getElementById("panel-comments-list");
+
+    const catSelect = document.getElementById("panel-paper-category-select");
+    const statusSelect = document.getElementById("panel-paper-status-select");
+    if (catSelect) catSelect.value = paper.category;
+    if (statusSelect) statusSelect.value = paper.status;
 
     if (titleDom) titleDom.innerText = paper.title;
     if (summaryDom) summaryDom.innerText = paper.summary;
