@@ -56,7 +56,8 @@
 
   --transition-fast: 0.1s ease;
   --transition-normal: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --connection-line: rgba(55, 53, 47, 0.14);
+  --connection-line: rgba(55, 53, 47, 0.3);
+  --connection-arrow: rgba(55, 53, 47, 0.45);
 }
 
 /* Dark Theme (Notion Dark Mode) */
@@ -71,7 +72,8 @@
   --text-main: rgba(255, 255, 255, 0.9);
   --text-muted: rgba(255, 255, 255, 0.6);
   --text-dim: rgba(255, 255, 255, 0.4);
-  --connection-line: rgba(255, 255, 255, 0.14);
+  --connection-line: rgba(255, 255, 255, 0.3);
+  --connection-arrow: rgba(255, 255, 255, 0.45);
   
   /* Dark mode tag adjustments */
   --tag-bg-foundations: rgba(35, 131, 226, 0.15);

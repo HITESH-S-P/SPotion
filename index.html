@@ -22,31 +22,31 @@
       <ul class="nav-links">
         <li>
           <a class="nav-item active" data-view="dashboard">
-            <span class="nav-icon">🏠</span>
+            <span class="nav-icon"></span>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
           <a class="nav-item" data-view="library">
-            <span class="nav-icon">📚</span>
+            <span class="nav-icon"></span>
             <span>Paper Library</span>
           </a>
         </li>
         <li>
           <a class="nav-item" data-view="mindmap">
-            <span class="nav-icon">🧠</span>
+            <span class="nav-icon"></span>
             <span>Mind Map</span>
           </a>
         </li>
         <li>
           <a class="nav-item" data-view="notes">
-            <span class="nav-icon">📝</span>
+            <span class="nav-icon"></span>
             <span>Research Notes</span>
           </a>
         </li>
         <li>
           <a class="nav-item" data-view="timeline">
-            <span class="nav-icon">🗺️</span>
+            <span class="nav-icon"></span>
             <span>Timeline</span>
           </a>
         </li>
@@ -166,7 +166,14 @@
         <!-- MIND MAP VIEW -->
         <section id="mindmap-view" class="view-section">
           <div id="mindmap-canvas-container" class="canvas-container">
-            <svg id="mindmap-svg-element" class="mindmap-svg"></svg>
+            <svg id="mindmap-svg-element" class="mindmap-svg">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6"
+                  orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 Z" fill="var(--connection-arrow)" />
+                </marker>
+              </defs>
+            </svg>
             <!-- Wrapper for panning and zooming -->
             <div id="canvas-wrapper"></div>
           </div>

@@ -46,7 +46,6 @@ class SPotion {
     const defaultData = window.SPotionData || { DEFAULT_PAPERS: [], CONNECTIONS: [], TEAM_MEMBERS: [], CATEGORY_COLORS: {} };
 
     this.papers = localPapers ? JSON.parse(localPapers) : defaultData.DEFAULT_PAPERS;
-    this.connections = localConnections ? JSON.parse(localConnections) : defaultData.CONNECTIONS;
     this.team = localTeam ? JSON.parse(localTeam) : defaultData.TEAM_MEMBERS;
     this.categoryColors = defaultData.CATEGORY_COLORS;
     this.currentTheme = localTheme || "dark";
@@ -67,9 +66,13 @@ class SPotion {
         p.status = "Reading";
       }
     });
+
+    // Generate dynamic semantic connections based on paper abstracts and notes
+    this.connections = this.generateSemanticConnections();
   }
 
   saveState() {
+    this.connections = this.generateSemanticConnections();
     localStorage.setItem("spotion_papers", JSON.stringify(this.papers));
     localStorage.setItem("spotion_connections", JSON.stringify(this.connections));
     localStorage.setItem("spotion_team", JSON.stringify(this.team));
@@ -853,6 +856,66 @@ class SPotion {
     link.download = "spotion_citations.bib";
     link.click();
     this.showToast("BibTeX library exported!", "success");
+  }
+
+  // Generate dynamic semantic connections based on paper abstracts and notes
+  generateSemanticConnections() {
+    const connections = [];
+    const papers = this.papers;
+    
+    papers.forEach(p => {
+      if (p.id === "paper-root") return;
+      
+      const title = p.title.toLowerCase();
+      const summary = p.summary.toLowerCase();
+      const notes = (p.notes || "").toLowerCase();
+      const text = `${title} ${summary} ${notes}`;
+      
+      let connected = false;
+      
+      // Rule 1: Connect optimization/ViT papers to the main ViT paper (paper-10)
+      if (p.id !== "paper-10" && (text.includes("vit") || text.includes("vision transformer") || text.includes("quantization") || text.includes("ssm"))) {
+        const vitPaper = papers.find(dp => dp.id === "paper-10");
+        if (vitPaper) {
+          connections.push({ from: "paper-10", to: p.id });
+          connected = true;
+        }
+      }
+      
+      // Rule 2: Connect masked reconstruction optimization to Point-UMAE (paper-11)
+      if (!connected && p.id !== "paper-11" && (text.includes("masked") || text.includes("autoencoder") || text.includes("reconstruction"))) {
+        const maePaper = papers.find(dp => dp.id === "paper-11");
+        if (maePaper) {
+          connections.push({ from: "paper-11", to: p.id });
+          connected = true;
+        }
+      }
+      
+      // Rule 3: Connect domain adaptation / arbitrary scenarios to JEPA (paper-3)
+      if (!connected && p.id !== "paper-3" && (text.includes("domain") || text.includes("scenario") || text.includes("adaptation") || text.includes("generaliz"))) {
+        const jepaPaper = papers.find(dp => dp.id === "paper-3");
+        if (jepaPaper) {
+          connections.push({ from: "paper-3", to: p.id });
+          connected = true;
+        }
+      }
+
+      // Rule 4: Connect Future/Applications (Robotics, Odometry, Perceptual) to Edge AI (paper-14)
+      if (!connected && p.id !== "paper-14" && (text.includes("robot") || text.includes("odometry") || text.includes("edge ai") || text.includes("device"))) {
+        const edgePaper = papers.find(dp => dp.id === "paper-14");
+        if (edgePaper) {
+          connections.push({ from: "paper-14", to: p.id });
+          connected = true;
+        }
+      }
+      
+      // Fallback: Connect directly from the central Root
+      if (!connected) {
+        connections.push({ from: "paper-root", to: p.id });
+      }
+    });
+    
+    return connections;
   }
 
   // Helper date formatting
