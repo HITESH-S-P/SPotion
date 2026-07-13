@@ -223,7 +223,7 @@ const DEFAULT_PAPERS = [
     status: "Done",
     notes: "# Perceptual Learning Technology\n\nCombines vision-language alignment (contrastive) with temporal state-space models. Shows major gains in robotics manipulation benchmarks.",
     comments: []
-  },
+  }
   // {
   //   id: "paper-14",
   //   title: "Edge AI Deployment",
