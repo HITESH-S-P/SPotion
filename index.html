@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPotion — Premium Research Hub & Mind Map Workspace</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div id="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside>
+      <div class="brand">
+        <span class="brand-logo">🌌</span>
+        <span class="brand-name">SPotion</span>
+      </div>
+
+      <ul class="nav-links">
+        <li>
+          <a class="nav-item active" data-view="dashboard">
+            <span class="nav-icon">🏠</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-view="library">
+            <span class="nav-icon">📚</span>
+            <span>Paper Library</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-view="mindmap">
+            <span class="nav-icon">🧠</span>
+            <span>Mind Map</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-view="notes">
+            <span class="nav-icon">📝</span>
+            <span>Research Notes</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" data-view="timeline">
+            <span class="nav-icon">🗺️</span>
+            <span>Timeline</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="user-widget">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main>
+      <!-- Header Area -->
+      <header>
+        <div class="page-title-area">
+          <h2>Research Workspace</h2>
+        </div>
+
+        <div class="header-actions">
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="global-search" class="search-input" placeholder="Search papers, notes, tags...">
+          </div>
+
+          <button id="theme-toggle" class="theme-toggle-btn" title="Toggle dark/light theme">🌙</button>
+
+          <button id="add-paper-btn" class="btn btn-primary">
+            <span>➕</span> Add Paper
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable workspace sections -->
+      <div class="content-workspace">
+
+        <!-- DASHBOARD VIEW -->
+        <section id="dashboard-view" class="view-section active">
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📄</div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-total-papers">0</div>
+                <div class="stat-label">Total Papers</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📖</div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-active-reading">0</div>
+                <div class="stat-label">Active Readings</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🔖</div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-bookmarked">0</div>
+                <div class="stat-label">Bookmarked</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-panels">
+            <!-- Reading Status Breakdown -->
+            <div class="panel">
+              <div class="panel-header">
+                <h3 class="panel-title">Reading Pipeline Status</h3>
+              </div>
+              <div class="progress-list" id="dashboard-progress-list">
+                <!-- Progress rows rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LIBRARY VIEW -->
+        <section id="library-view" class="view-section">
+          <div class="library-layout">
+            <div class="library-filters">
+              <div class="filters-group">
+                <label for="filter-category"
+                  style="font-size: 13px; font-weight:600; color:var(--text-muted)">Category:</label>
+                <select id="filter-category" class="select-filter">
+                  <option value="all">All Categories</option>
+                  <option value="Foundations">Foundations</option>
+                  <option value="Survey">Surveys</option>
+                  <option value="Optimization">Optimizations</option>
+                  <option value="Transformer">Transformers</option>
+                  <option value="Autoencoder">Autoencoders</option>
+                  <option value="Application">Applications</option>
+                  <option value="Future">Future Scope</option>
+                </select>
+
+                <label for="filter-status"
+                  style="font-size: 13px; font-weight:600; color:var(--text-muted); margin-left:14px">Status:</label>
+                <select id="filter-status" class="select-filter">
+                  <option value="all">All Statuses</option>
+                  <option value="Reading">Reading</option>
+                  <option value="Done">Done</option>
+                  <option value="Bookmarked">Bookmarked</option>
+                  <option value="In Review">In Review</option>
+                </select>
+              </div>
+
+              <button id="export-bibtex-btn" class="btn" title="Export current library references to BibTeX format">
+                <span>📤</span> Export to BibTeX
+              </button>
+            </div>
+
+            <div class="papers-grid" id="papers-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- MIND MAP VIEW -->
+        <section id="mindmap-view" class="view-section">
+          <div id="mindmap-canvas-container" class="canvas-container">
+            <svg id="mindmap-svg-element" class="mindmap-svg"></svg>
+            <!-- Wrapper for panning and zooming -->
+            <div id="canvas-wrapper"></div>
+          </div>
+
+          <div class="mindmap-controls">
+            <button id="zoom-in-btn" class="btn btn-icon-only" title="Zoom In">➕</button>
+            <button id="zoom-out-btn" class="btn btn-icon-only" title="Zoom Out">➖</button>
+            <button id="zoom-center-btn" class="btn btn-icon-only" title="Auto Center/Fit Canvas">🎯</button>
+          </div>
+
+          <div class="mindmap-legend">
+            <div
+              style="font-weight:700; font-size:12px; margin-bottom:4px; border-bottom:1px solid var(--border-color); padding-bottom:4px;">
+              Legend</div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#1f4ed8"></div> Foundations
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#7c3aed"></div> Surveys
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#059669"></div> Optimizations
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#dc2626"></div> Transformers
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#ea580c"></div> Autoencoders
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#0891b2"></div> Applications
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background:#9333ea"></div> Future Scope
+            </div>
+          </div>
+        </section>
+
+        <!-- RESEARCH NOTES VIEW -->
+        <section id="notes-view" class="view-section">
+          <div class="notes-layout">
+            <div class="notes-sidebar">
+              <h3 style="font-size:16px; margin-bottom:12px">Papers List</h3>
+              <div class="notes-paper-list" id="notes-paper-list">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <div class="notes-editor-container">
+              <div class="notes-editor-header">
+                <h3 id="active-note-title" style="font-size:18px">Select a paper to read or edit notes</h3>
+                <div style="display:flex; gap:8px">
+                  <button id="note-edit-btn" class="btn btn-primary btn-sm">Edit Markdown</button>
+                  <button id="note-preview-btn" class="btn btn-sm">Rich Preview</button>
+                </div>
+              </div>
+
+              <!-- Note raw markdown editor text area -->
+              <textarea id="notes-editor-area" class="editor-textarea"
+                placeholder="# Enter notes using markdown..."></textarea>
+
+              <!-- Markdown preview pane -->
+              <div id="notes-preview-area" class="notes-preview"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TIMELINE VIEW -->
+        <section id="timeline-view" class="view-section">
+          <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div id="timeline-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- SLIDING DETAIL PANEL (SLIDE OUT DRAWER) -->
+    <div class="panel-overlay" id="panel-overlay"></div>
+
+    <div class="sliding-panel" id="paper-detail-panel">
+      <div class="sliding-panel-header">
+        <h3 style="font-size: 18px; margin:0">Research Paper Details</h3>
+        <button id="panel-close-btn" class="btn btn-icon-only"
+          style="border:none; background:transparent; font-size:18px">❌</button>
+      </div>
+
+      <div class="sliding-panel-body">
+        <div class="detail-row">
+          <div id="panel-paper-title" class="detail-value detail-value-large"></div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">Authors</div>
+          <div id="panel-paper-authors" class="detail-value" style="font-style:italic"></div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">Abstract Summary</div>
+          <div id="panel-paper-summary" class="detail-value"></div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">Metadata Info</div>
+          <div id="panel-paper-details" class="detail-value"></div>
+        </div>
+
+        <!-- Paper Comments Section -->
+        <div class="comments-section">
+          <div class="detail-label">Research Comments & Log</div>
+          <div class="comments-list" id="panel-comments-list">
+            <!-- Comments rendering dynamically -->
+          </div>
+
+          <div class="comment-input-area">
+            <textarea id="panel-comment-input" class="comment-textbox" rows="2"
+              placeholder="Write a comment, reflection or log entry..."></textarea>
+            <button id="post-comment-btn" class="btn btn-primary" style="padding: 0 16px;">Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD PAPER MODAL -->
+    <div class="modal" id="add-paper-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Research Paper</h3>
+        <button class="modal-close"
+          style="background:transparent; border:none; color:var(--text-main); font-size:16px; cursor:pointer">❌</button>
+      </div>
+
+      <form id="add-paper-form">
+        <div class="form-group">
+          <label for="paper-title-input">Paper Title *</label>
+          <input type="text" id="paper-title-input" class="form-control" placeholder="e.g. Segment Anything" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="paper-category-input">Category *</label>
+            <select id="paper-category-input" class="form-control" required>
+              <option value="Foundations">Foundations</option>
+              <option value="Survey">Survey</option>
+              <option value="Optimization">Optimization</option>
+              <option value="Transformer">Transformer</option>
+              <option value="Autoencoder">Autoencoder</option>
+              <option value="Application">Application</option>
+              <option value="Future">Future Scope</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="paper-status-input">Reading Status</label>
+            <select id="paper-status-input" class="form-control">
+              <option value="Reading">Reading</option>
+              <option value="Done">Done</option>
+              <option value="Bookmarked">Bookmarked</option>
+              <option value="In Review">In Review</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="paper-year-input">Publication Year</label>
+            <input type="number" id="paper-year-input" class="form-control" value="2026" min="1990" max="2035">
+          </div>
+
+          <div class="form-group">
+            <label for="paper-venue-input">Venue / Journal</label>
+            <input type="text" id="paper-venue-input" class="form-control" placeholder="e.g. CVPR 2026, arXiv">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paper-authors-input">Authors</label>
+          <input type="text" id="paper-authors-input" class="form-control" placeholder="e.g. John Doe, Alice Smith">
+        </div>
+
+        <div class="form-group">
+          <label for="paper-link-input">Paper URL (ArXiv/IEEE/PDF)</label>
+          <input type="url" id="paper-link-input" class="form-control" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label for="paper-summary-input">Abstract Summary *</label>
+          <textarea id="paper-summary-input" class="form-control" rows="3"
+            placeholder="Enter a brief description of the paper pretext task, methodology, and key results..."
+            required></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px">
+          <button class="btn btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Paper</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="mindmap.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
