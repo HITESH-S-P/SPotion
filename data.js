@@ -64,22 +64,6 @@ const DEFAULT_PAPERS = [
     notes: "# Joint-Embedding Predictive Architecture (JEPA)\n\nJEPA avoids predicting raw pixel content (which contains too much noise/unpredictable detail) and instead predicts representations in a joint-embedding space.\n\n### Advantages:\n1. Less computationally expensive than autoencoders.\n2. Captures semantic relationships better.\n3. Robust to pixel-level variations.",
     comments: []
   },
-  // {
-  //   id: "paper-4",
-  //   title: "Arbitrary Scenarios SSL",
-  //   category: "Foundations",
-  //   summary: "Generalized SSL representations designed to capture features robust to domain shift and arbitrary environment variations.",
-  //   link: "https://arxiv.org/pdf/2210.03289.pdf",
-  //   x: 250,
-  //   y: 720,
-  //   color: "#2563eb",
-  //   year: 2022,
-  //   authors: "R. Devry, M. Patel",
-  //   venue: "NeurIPS 2022",
-  //   status: "Bookmarked",
-  //   notes: "# Arbitrary Scenarios SSL\n\nExplores generalizability of SSL models to unseen tasks and out-of-distribution (OOD) scenarios. Crucial for robust robotics applications.",
-  //   comments: []
-  // },
   {
     id: "paper-5",
     title: "Self-supervised Domain Adaptation for Computer Vision Tasks",
@@ -176,22 +160,6 @@ const DEFAULT_PAPERS = [
     notes: "# Empirical Study of SSL ViTs (MoCo v3)\n\nThis paper details MoCo v3 and shows that ViT training under self-supervision can be unstable. They identify that the gradient spike in the first few layers causes instability and propose freezing the patch projection layer.",
     comments: []
   },
-  // {
-  //   id: "paper-11",
-  //   title: "Point-UMAE",
-  //   category: "Autoencoder",
-  //   summary: "Unsupervised masked autoencoder framework designed for 3D point cloud representations, showing high transferability.",
-  //   link: "https://ieeexplore.ieee.org/document/10967637/",
-  //   x: 1200,
-  //   y: 520,
-  //   color: "#ea580c",
-  //   year: 2025,
-  //   authors: "Z. Liang, L. Wang",
-  //   venue: "IEEE T-IP",
-  //   status: "In Review",
-  //   notes: "# Point-UMAE\n\nExtension of MAE to 3D point cloud data. Uses a point shifting strategy to represent irregular geometry before masking.",
-  //   comments: []
-  // },
   {
     id: "paper-12",
     title: "Neural Memory Self-Supervised State Space Models With Learnable Gates",
@@ -224,54 +192,6 @@ const DEFAULT_PAPERS = [
     notes: "# Perceptual Learning Technology\n\nCombines vision-language alignment (contrastive) with temporal state-space models. Shows major gains in robotics manipulation benchmarks.",
     comments: []
   }
-  // {
-  //   id: "paper-14",
-  //   title: "Edge AI Deployment",
-  //   category: "Future",
-  //   summary: "Investigating lightweight distillation of massive SSL foundations models to low-power edge platforms.",
-  //   link: "",
-  //   x: 1600,
-  //   y: 860,
-  //   color: "#9333ea",
-  //   year: 2025,
-  //   authors: "F. Neri, G. Gomez",
-  //   venue: "EdgeAI Conference 2025",
-  //   status: "Reading",
-  //   notes: "# Edge AI Deployment\n\nFuture research roadmap about moving SSL visual models to sub-watt microcontrollers. Looks at binary neural networks and sparse activations.",
-  //   comments: []
-  // },
-  // {
-  //   id: "paper-15",
-  //   title: "Medical Imaging SSL",
-  //   category: "Future",
-  //   summary: "Leveraging self-supervised pretraining on generic medical datasets to adapt to low-label diagnostic tasks.",
-  //   link: "",
-  //   x: 1850,
-  //   y: 1030,
-  //   color: "#9333ea",
-  //   year: 2024,
-  //   authors: "M. Ghafoorian, H. Karssemeijer",
-  //   venue: "Medical Image Analysis",
-  //   status: "Bookmarked",
-  //   notes: "# Medical Imaging SSL\n\nPre-training on 10 million unlabeled clinical scans, showing state-of-the-art results on tumor segmentation with just 1% labeled tuning.",
-  //   comments: []
-  // },
-  // {
-  //   id: "paper-16",
-  //   title: "Robotics SSL Perception",
-  //   category: "Future",
-  //   summary: "Autonomous perception learning for robotic manipulation and navigation utilizing multi-view contrastive video SSL.",
-  //   link: "",
-  //   x: 1850,
-  //   y: 1230,
-  //   color: "#9333ea",
-  //   year: 2025,
-  //   authors: "P. Agrawal, S. Levine",
-  //   venue: "CoRL 2025",
-  //   status: "In Review",
-  //   notes: "# Robotics SSL Perception\n\nUsing robot's own interaction data (self-touch, visual change) as self-supervised signals. Bridges the simulation-to-real gap rapidly.",
-  //   comments: []
-  // }
 ];
 
 const CONNECTIONS = [
@@ -287,10 +207,7 @@ const CONNECTIONS = [
   { from: "paper-root", to: "paper-10" },
   { from: "paper-root", to: "paper-11" },
   { from: "paper-root", to: "paper-12" },
-  { from: "paper-root", to: "paper-13" },
-  { from: "paper-root", to: "paper-14" },
-  { from: "paper-root", to: "paper-15" },
-  { from: "paper-root", to: "paper-16" }
+  { from: "paper-root", to: "paper-13" }
 ];
 
 const TEAM_MEMBERS = [

@@ -44,13 +44,77 @@ class SPotion {
     const localTheme = localStorage.getItem("spotion_theme");
 
     const defaultData = window.SPotionData || { DEFAULT_PAPERS: [], CONNECTIONS: [], TEAM_MEMBERS: [], CATEGORY_COLORS: {} };
-
-    this.papers = localPapers ? JSON.parse(localPapers) : defaultData.DEFAULT_PAPERS;
-    this.team = localTeam ? JSON.parse(localTeam) : defaultData.TEAM_MEMBERS;
     this.categoryColors = defaultData.CATEGORY_COLORS;
     this.currentTheme = localTheme || "dark";
 
-    // Align paper colors, clean up fake comments, update to direct PDF links, and update Survey statuses automatically
+    const originalDefaultIds = ["paper-root", "paper-1", "paper-2", "paper-3", "paper-4", "paper-5", "paper-6", "paper-7", "paper-8", "paper-9", "paper-10", "paper-11", "paper-12", "paper-13", "paper-14", "paper-15", "paper-16"];
+
+    // Load overrides and custom papers
+    let userPapers = [];
+    let overrides = {};
+
+    const localUserPapers = localStorage.getItem("spotion_user_papers");
+    const localOverrides = localStorage.getItem("spotion_paper_overrides");
+
+    if (localUserPapers && localOverrides) {
+      userPapers = JSON.parse(localUserPapers);
+      overrides = JSON.parse(localOverrides);
+    } else if (localPapers) {
+      // Migrate legacy schema to delta override schema
+      const oldPapers = JSON.parse(localPapers);
+      oldPapers.forEach(p => {
+        if (originalDefaultIds.includes(p.id)) {
+          overrides[p.id] = {
+            status: p.status,
+            category: p.category,
+            notes: p.notes,
+            comments: p.comments,
+            x: p.x,
+            y: p.y,
+            color: p.color
+          };
+        } else {
+          userPapers.push(p);
+        }
+      });
+      localStorage.setItem("spotion_user_papers", JSON.stringify(userPapers));
+      localStorage.setItem("spotion_paper_overrides", JSON.stringify(overrides));
+    }
+
+    // Always start default papers from current active list in data.js
+    this.papers = JSON.parse(JSON.stringify(defaultData.DEFAULT_PAPERS));
+
+    // Apply any saved overrides (like status or notes changes)
+    this.papers.forEach(p => {
+      if (overrides[p.id]) {
+        const o = overrides[p.id];
+        if (o.status !== undefined) p.status = o.status;
+        if (o.category !== undefined) p.category = o.category;
+        if (o.notes !== undefined) p.notes = o.notes;
+        if (o.comments !== undefined) p.comments = o.comments;
+        if (o.x !== undefined) p.x = o.x;
+        if (o.y !== undefined) p.y = o.y;
+        if (o.color !== undefined) p.color = o.color;
+      }
+    });
+
+    // Add custom papers
+    this.papers = this.papers.concat(userPapers);
+
+    // Sync and clean connections
+    this.connections = localConnections ? JSON.parse(localConnections) : defaultData.CONNECTIONS;
+    this.connections = this.connections.filter(c => {
+      const endpointsExist = this.papers.some(p => p.id === c.from) && this.papers.some(p => p.id === c.to);
+      if (!endpointsExist) return false;
+      if (originalDefaultIds.includes(c.from) && originalDefaultIds.includes(c.to)) {
+        return defaultData.CONNECTIONS.some(dc => dc.from === c.from && dc.to === c.to);
+      }
+      return true; // Keep user-added custom connections
+    });
+
+    this.team = localTeam ? JSON.parse(localTeam) : defaultData.TEAM_MEMBERS;
+
+    // Apply color palettes, direct PDF link checks, and Survey reading conventions
     this.papers.forEach(p => {
       if (this.categoryColors[p.category]) {
         p.color = this.categoryColors[p.category];
@@ -66,17 +130,38 @@ class SPotion {
         p.status = "Reading";
       }
     });
-
-    // Generate dynamic semantic connections based on paper abstracts and notes
-    this.connections = this.generateSemanticConnections();
   }
 
   saveState() {
-    this.connections = this.generateSemanticConnections();
-    localStorage.setItem("spotion_papers", JSON.stringify(this.papers));
+    const originalDefaultIds = ["paper-root", "paper-1", "paper-2", "paper-3", "paper-4", "paper-5", "paper-6", "paper-7", "paper-8", "paper-9", "paper-10", "paper-11", "paper-12", "paper-13", "paper-14", "paper-15", "paper-16"];
+
+    const userPapers = [];
+    const overrides = {};
+
+    this.papers.forEach(p => {
+      if (originalDefaultIds.includes(p.id)) {
+        overrides[p.id] = {
+          status: p.status,
+          category: p.category,
+          notes: p.notes,
+          comments: p.comments,
+          x: p.x,
+          y: p.y,
+          color: p.color
+        };
+      } else {
+        userPapers.push(p);
+      }
+    });
+
+    localStorage.setItem("spotion_user_papers", JSON.stringify(userPapers));
+    localStorage.setItem("spotion_paper_overrides", JSON.stringify(overrides));
     localStorage.setItem("spotion_connections", JSON.stringify(this.connections));
     localStorage.setItem("spotion_team", JSON.stringify(this.team));
     localStorage.setItem("spotion_theme", this.currentTheme);
+
+    // Backward compatibility backup
+    localStorage.setItem("spotion_papers", JSON.stringify(this.papers));
   }
 
   setupToastContainer() {
@@ -856,66 +941,6 @@ class SPotion {
     link.download = "spotion_citations.bib";
     link.click();
     this.showToast("BibTeX library exported!", "success");
-  }
-
-  // Generate dynamic semantic connections based on paper abstracts and notes
-  generateSemanticConnections() {
-    const connections = [];
-    const papers = this.papers;
-    
-    papers.forEach(p => {
-      if (p.id === "paper-root") return;
-      
-      const title = p.title.toLowerCase();
-      const summary = p.summary.toLowerCase();
-      const notes = (p.notes || "").toLowerCase();
-      const text = `${title} ${summary} ${notes}`;
-      
-      let connected = false;
-      
-      // Rule 1: Connect optimization/ViT papers to the main ViT paper (paper-10)
-      if (p.id !== "paper-10" && (text.includes("vit") || text.includes("vision transformer") || text.includes("quantization") || text.includes("ssm"))) {
-        const vitPaper = papers.find(dp => dp.id === "paper-10");
-        if (vitPaper) {
-          connections.push({ from: "paper-10", to: p.id });
-          connected = true;
-        }
-      }
-      
-      // Rule 2: Connect masked reconstruction optimization to Point-UMAE (paper-11)
-      if (!connected && p.id !== "paper-11" && (text.includes("masked") || text.includes("autoencoder") || text.includes("reconstruction"))) {
-        const maePaper = papers.find(dp => dp.id === "paper-11");
-        if (maePaper) {
-          connections.push({ from: "paper-11", to: p.id });
-          connected = true;
-        }
-      }
-      
-      // Rule 3: Connect domain adaptation / arbitrary scenarios to JEPA (paper-3)
-      if (!connected && p.id !== "paper-3" && (text.includes("domain") || text.includes("scenario") || text.includes("adaptation") || text.includes("generaliz"))) {
-        const jepaPaper = papers.find(dp => dp.id === "paper-3");
-        if (jepaPaper) {
-          connections.push({ from: "paper-3", to: p.id });
-          connected = true;
-        }
-      }
-
-      // Rule 4: Connect Future/Applications (Robotics, Odometry, Perceptual) to Edge AI (paper-14)
-      if (!connected && p.id !== "paper-14" && (text.includes("robot") || text.includes("odometry") || text.includes("edge ai") || text.includes("device"))) {
-        const edgePaper = papers.find(dp => dp.id === "paper-14");
-        if (edgePaper) {
-          connections.push({ from: "paper-14", to: p.id });
-          connected = true;
-        }
-      }
-      
-      // Fallback: Connect directly from the central Root
-      if (!connected) {
-        connections.push({ from: "paper-root", to: p.id });
-      }
-    });
-    
-    return connections;
   }
 
   // Helper date formatting

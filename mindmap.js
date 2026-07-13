@@ -210,14 +210,8 @@ class MindMapCanvas {
     this.svg.setAttribute('width', maxX);
     this.svg.setAttribute('height', maxY);
 
-    // Clear SVG content and recreate arrow marker defs
-    this.svg.innerHTML = `
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8 5 L 0 8.5 Z" fill="var(--connection-arrow)" />
-        </marker>
-      </defs>
-    `;
+    // Clear SVG content
+    this.svg.innerHTML = '';
 
     // Draw SVG connections
     this.connections.forEach(conn => {
@@ -225,39 +219,27 @@ class MindMapCanvas {
       const toNode = this.nodes.find(n => n.id === conn.to);
 
       if (fromNode && toNode) {
-        // Center coordinates of node cards
+        // Calculate anchors (center point of nodes)
+        // Est. dimensions: width is around 220px, height is around 120px
         const fromX = fromNode.x + 110;
         const fromY = fromNode.y + 60;
         const toX = toNode.x + 110;
         const toY = toNode.y + 60;
 
-        const dx = toX - fromX;
-        const dy = toY - fromY;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-
-        // Calculate boundary offsets based on node dimensions (220x120) with a 12px visibility margin
-        const offsetX = (dx / dist) * 122;
-        const offsetY = (dy / dist) * 72;
-
-        const startX = fromX + offsetX;
-        const startY = fromY + offsetY;
-        const endX = toX - offsetX;
-        const endY = toY - offsetY;
-
-        // Draw dynamic smooth Bezier curves with arrow heads
+        // Draw dynamic smooth Bezier curves
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const cx1 = startX + (endX - startX) / 2;
-        const cy1 = startY;
-        const cx2 = startX + (endX - startX) / 2;
-        const cy2 = endY;
+        const cx1 = fromX + (toX - fromX) / 2;
+        const cy1 = fromY;
+        const cx2 = fromX + (toX - fromX) / 2;
+        const cy2 = toY;
 
-        const dAttr = `M ${startX} ${startY} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${endX} ${endY}`;
+        const dAttr = `M ${fromX} ${fromY} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${toX} ${toY}`;
         path.setAttribute('d', dAttr);
         path.setAttribute('stroke', 'var(--connection-line)');
         path.setAttribute('stroke-width', '1.8');
         path.setAttribute('fill', 'none');
         path.setAttribute('opacity', '1');
-        path.setAttribute('marker-end', 'url(#arrow)');
+        path.setAttribute('stroke-dasharray', 'none');
 
         this.svg.appendChild(path);
       }
