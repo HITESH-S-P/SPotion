@@ -28,7 +28,7 @@ const DEFAULT_PAPERS = [
     year: 2021,
     authors: "P. Gu, et al.",
     venue: "arXiv (2111)",
-    status: "Reading",
+    status: "Bookmarked",
     notes: "# Recent Advancements in SSL Paradigms\n\nThis survey paper organizes SSL methods into contrastive, generative, and predictive approaches. It provides a comprehensive analysis of taxonomy and performance benchmarks.",
     comments: []
   },
@@ -44,7 +44,7 @@ const DEFAULT_PAPERS = [
     year: 2024,
     authors: "S. Liu, T. Wang, et al.",
     venue: "arXiv (2408)",
-    status: "Reading",
+    status: "Bookmarked",
     notes: "# SSL: Algorithms, Applications & Future Trends\n\nExcellent reading for understanding current industry applications (autonomous driving, healthcare, robotics) and challenges like multimodal alignment.",
     comments: []
   },
@@ -68,7 +68,7 @@ const DEFAULT_PAPERS = [
     id: "paper-5",
     title: "Self-supervised Domain Adaptation for Computer Vision Tasks",
     category: "Foundations",
-    summary: "Cross-domain representation learning techniques utilizing self-supervision to align source and target distributions.",
+    summary: "Recent progress of self-supervised visual representation learning has achieved remarkable success on many challenging computer vision benchmarks. However, whether these techniques can be used for domain adaptation has not been explored. In this work, we propose a generic method for self-supervised domain adaptation, using object recognition and semantic segmentation of urban scenes as use cases. Focusing on simple pretext/auxiliary tasks (e.g. image rotation prediction), we assess different learning strategies to improve domain adaptation effectiveness by self-supervision. Additionally, we propose two complementary strategies to further boost the domain adaptation accuracy on semantic segmentation within our method, consisting of prediction layer alignment and batch normalization calibration. The experimental results show adaptation levels comparable to most studied domain adaptation methods, thus, bringing self-supervision as a new alternative for reaching domain adaptation. The code is available at this link.",
     link: "https://arxiv.org/pdf/1907.10915.pdf",
     x: 250,
     y: 900,
@@ -149,7 +149,7 @@ const DEFAULT_PAPERS = [
     title: "An Empirical Study of Training Self-Supervised Vision Transformers",
     category: "Transformer",
     summary: "This paper does not describe a novel method. Instead, it studies a straightforward, incremental, yet must-know baseline given the recent progress in computer vision: self-supervised learning for Vision Transformers (ViT). While the training recipes for standard convolutional networks have been highly mature and robust, the recipes for ViT are yet to be built, especially in the self-supervised scenarios where training becomes more challenging. In this work, we go back to basics and investigate the effects of several fundamental components for training self-supervised ViT. We observe that instability is a major issue that degrades accuracy, and it can be hidden by apparently good results. We reveal that these results are indeed partial failure, and they can be improved when training is made more stable. We benchmark ViT results in MoCo v3 and several other self-supervised frameworks, with ablations in various aspects. We discuss the currently positive evidence as well as challenges and open questions. We hope that this work will provide useful data points and experience for future research.",
-    link: "https://openaccess.thecvf.com/content/ICCV2021/papers/Chen_An_Empirical_Study_of_Training_Self-Supervised_Vision_Transformers_ICCV_2021_paper.pdf",
+    link: "https://arxiv.org/pdf/2104.02057",
     x: 1200,
     y: 250,
     color: "#dc2626",
@@ -211,7 +211,7 @@ const CONNECTIONS = [
 ];
 
 const TEAM_MEMBERS = [
-  { name: "Hitesh", role: "", avatar: "👨‍💻", color: "#3b82f6" }
+  { name: "Hitesh", role: "", avatar: "👨", color: "#3b82f6" }
 ];
 
 const CATEGORY_COLORS = {
