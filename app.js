@@ -511,6 +511,10 @@ class SPotion {
       if (paper.status === "In Review") statusClass = "badge-review";
       if (paper.status === "Bookmarked") statusClass = "badge-bookmarked";
 
+      const isPdf = paper.link && (paper.link.toLowerCase().endsWith('.pdf') || paper.link.toLowerCase().includes('/pdf/'));
+      const escapedLink = paper.link ? paper.link.replace(/'/g, "\\'") : '';
+      const escapedTitle = paper.title ? paper.title.replace(/'/g, "\\'") : '';
+
       card.innerHTML = `
         <div class="paper-card-header">
           <span class="category-tag category-${paper.category.toLowerCase().replace(/\s+/g, '')}">${paper.category}</span>
@@ -521,7 +525,10 @@ class SPotion {
         <p class="paper-summary">${paper.summary}</p>
         <div class="paper-card-footer">
           <span class="paper-meta-details">${paper.venue || "arXiv"} • ${paper.year}</span>
-          ${paper.link ? `<a href="${paper.link}" target="_blank" class="paper-link-btn" onclick="event.stopPropagation();">🔗 Link</a>` : ''}
+          <div style="display:flex; gap:8px; align-items:center;">
+            ${paper.link ? `<a href="${paper.link}" target="_blank" class="paper-link-btn" onclick="event.stopPropagation();">🔗 Link</a>` : ''}
+            ${isPdf ? `<a href="#" class="pdf-download-link" onclick="event.stopPropagation(); event.preventDefault(); window.SPotionApp.downloadPaperPDF('${escapedLink}', '${escapedTitle}');" title="Download PDF to local">📥 PDF</a>` : ''}
+          </div>
         </div>
       `;
 
@@ -553,11 +560,23 @@ class SPotion {
     if (authorsDom) authorsDom.innerText = paper.authors || "Unknown Authors";
 
     if (detailsDom) {
+      const isPdf = paper.link && (paper.link.toLowerCase().endsWith('.pdf') || paper.link.toLowerCase().includes('/pdf/'));
+      const escapedLink = paper.link ? paper.link.replace(/'/g, "\\'") : '';
+      const escapedTitle = paper.title ? paper.title.replace(/'/g, "\\'") : '';
       detailsDom.innerHTML = `
         <div><strong>Category:</strong> ${paper.category}</div>
         <div><strong>Published Year:</strong> ${paper.year}</div>
         <div><strong>Venue:</strong> ${paper.venue || "N/A"}</div>
         <div><strong>Status:</strong> ${paper.status}</div>
+        ${paper.link ? `
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="${paper.link}" target="_blank" class="btn" style="font-size: 12px; padding: 4px 10px;">🔗 View Original</a>
+            ${isPdf ? `<button class="btn btn-primary" style="font-size: 12px; padding: 4px 10px; background: var(--accent-success); border-color: var(--accent-success);" onclick="window.SPotionApp.downloadPaperPDF('${escapedLink}', '${escapedTitle}');">📥 Download PDF</button>` : ''}
+          </div>
+          ${isPdf ? `<span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">💡 <strong>Note:</strong> One click starts direct download to your local system.</span>` : ''}
+        </div>
+        ` : ''}
       `;
     }
 
@@ -955,6 +974,30 @@ class SPotion {
     if (hours < 24) return `${hours} hours ago`;
 
     return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  async downloadPaperPDF(url, title) {
+    const filename = title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".pdf";
+    this.showToast("Starting PDF download...", "info");
+    try {
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error("Failed to fetch PDF");
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl);
+      this.showToast("PDF downloaded successfully!", "success");
+    } catch (err) {
+      console.error(err);
+      this.showToast("Direct download failed. Opening PDF in new tab.", "error");
+      window.open(url, "_blank");
+    }
   }
 }
 

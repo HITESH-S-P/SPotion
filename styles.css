@@ -1251,3 +1251,21 @@ header {
   flex-grow: 1;
   outline: none;
 }
+
+/* PDF Download Link */
+.pdf-download-link {
+  color: var(--accent-success);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.pdf-download-link:hover {
+  text-decoration: underline;
+  color: #0c6140;
+}
+
+[data-theme="dark"] .pdf-download-link:hover {
+  color: #3bb37c;
+}

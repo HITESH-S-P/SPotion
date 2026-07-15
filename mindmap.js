@@ -154,16 +154,39 @@ class MindMapCanvas {
       nodeEl.appendChild(summary);
 
       if (paper.link) {
+        const linkContainer = document.createElement('div');
+        linkContainer.style.display = 'flex';
+        linkContainer.style.gap = '8px';
+        linkContainer.style.marginTop = '8px';
+        linkContainer.style.flexWrap = 'wrap';
+
         const link = document.createElement('a');
         link.href = paper.link;
         link.target = '_blank';
         link.className = 'paper-link-btn';
-        link.style.marginTop = '8px';
-        link.style.display = 'flex';
-        link.innerHTML = '🔗 Open Paper';
+        link.innerHTML = '🔗 Open';
         // Stop drag propagation on link click
         link.addEventListener('click', (e) => e.stopPropagation());
-        nodeEl.appendChild(link);
+        linkContainer.appendChild(link);
+
+        const isPdf = paper.link && (paper.link.toLowerCase().endsWith('.pdf') || paper.link.toLowerCase().includes('/pdf/'));
+        if (isPdf) {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = '#';
+          downloadLink.className = 'pdf-download-link';
+          downloadLink.innerHTML = '📥 PDF';
+          downloadLink.title = "Download PDF to local";
+          downloadLink.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            if (window.SPotionApp) {
+              window.SPotionApp.downloadPaperPDF(paper.link, paper.title);
+            }
+          });
+          linkContainer.appendChild(downloadLink);
+        }
+
+        nodeEl.appendChild(linkContainer);
       }
 
       this.updateNodePositionDOM(nodeEl, paper.x, paper.y);
